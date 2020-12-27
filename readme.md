@@ -1,1 +1,1 @@
-Just messing around a bit with GoLang and OpenGL
+Just messing around a bit with GoLang and OpenGL based on: [https://kylewbanks.com/blog/tutorial-opengl-with-golang-part-1-hello-opengl](https://kylewbanks.com/blog/tutorial-opengl-with-golang-part-1-hello-opengl)
