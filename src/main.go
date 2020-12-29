@@ -27,31 +27,13 @@ func main() {
 	glslProgram.CompileAndAttachShader(fragment, gl.FRAGMENT_SHADER)
 	glslProgram.Link()
 
+	triangle := createTriangle()
+	objects := []drawable{triangle}
+
 	for !window.ShouldClose() {
-		draw(window, glslProgram)
+		draw(window, glslProgram, objects)
 	}
 	log.Println("Application end")
-}
-
-// initGlfw initializes glfw and returns a window to use
-func initGlfw() *glfw.Window {
-	if err := glfw.Init(); err != nil {
-		panic(err)
-	}
-
-	glfw.WindowHint(glfw.Resizable, glfw.False)
-	glfw.WindowHint(glfw.ContextVersionMajor, 4) // or 2
-	glfw.WindowHint(glfw.ContextVersionMinor, 1)
-	glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
-	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
-
-	window, err := glfw.CreateWindow(width, height, "GOL", nil, nil)
-	if err != nil {
-		panic(err)
-	}
-	window.MakeContextCurrent()
-
-	return window
 }
 
 func initOpenGL() {
@@ -62,9 +44,14 @@ func initOpenGL() {
 	log.Println("OpenGL Version", version)
 }
 
-func draw(window *glfw.Window, program GLSLProgram) {
+func draw(window *glfw.Window, program GLSLProgram, objects []drawable) {
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 	program.Use()
+
+	for _, object := range objects {
+		object.draw()
+	}
+
 	glfw.PollEvents()
 	window.SwapBuffers()
 }
