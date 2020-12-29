@@ -15,12 +15,20 @@ const (
 
 func main() {
 	log.Println("Application starting...")
+	vertex := readFile("shaders/vertex.glsl")
+	fragment := readFile("shaders/fragment.glsl")
+	log.Println(vertex)   // debug
+	log.Println(fragment) // debug
 	runtime.LockOSThread()
 	window := initGlfw()
 	defer glfw.Terminate()
-	glProgram := initOpenGL()
+
+	initOpenGL()
+	glslProgram := NewGLSLProgram()
+	glslProgram.Link()
+
 	for !window.ShouldClose() {
-		draw(window, glProgram)
+		draw(window, glslProgram)
 	}
 	log.Println("Application end")
 }
@@ -46,21 +54,17 @@ func initGlfw() *glfw.Window {
 	return window
 }
 
-func initOpenGL() uint32 {
+func initOpenGL() {
 	if err := gl.Init(); err != nil {
 		panic(err)
 	}
 	version := gl.GoStr(gl.GetString(gl.VERSION))
 	log.Println("OpenGL Version", version)
-
-	glProgram := gl.CreateProgram()
-	gl.LinkProgram(glProgram)
-	return glProgram
 }
 
-func draw(window *glfw.Window, glProgram uint32) {
+func draw(window *glfw.Window, program GLSLProgram) {
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-	gl.UseProgram(glProgram)
+	program.Use()
 	glfw.PollEvents()
 	window.SwapBuffers()
 }
