@@ -15,16 +15,16 @@ const (
 
 func main() {
 	log.Println("Application starting...")
-	vertex := readFile("shaders/vertex.glsl")
-	fragment := readFile("shaders/fragment.glsl")
-	log.Println(vertex)   // debug
-	log.Println(fragment) // debug
 	runtime.LockOSThread()
 	window := initGlfw()
 	defer glfw.Terminate()
 
 	initOpenGL()
 	glslProgram := NewGLSLProgram()
+	vertex := readFile("shaders/vertex.glsl")
+	fragment := readFile("shaders/fragment.glsl")
+	glslProgram.CompileAndAttachShader(vertex, gl.VERTEX_SHADER)
+	glslProgram.CompileAndAttachShader(fragment, gl.FRAGMENT_SHADER)
 	glslProgram.Link()
 
 	for !window.ShouldClose() {
